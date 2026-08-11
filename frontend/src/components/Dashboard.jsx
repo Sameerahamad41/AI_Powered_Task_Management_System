@@ -148,9 +148,7 @@ const Dashboard = ({ setAuth }) => {
                                 <option value="DONE">Done</option>
                             </select>
                             <div className="flex space-x-1 opacity-60 group-hover:opacity-100 transition-opacity">
-                                {localStorage.getItem('role') === 'ROLE_ADMIN' && (
-                                    <button onClick={() => fetchAuditLogs(task.id)} className="p-2 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors" title="View Blockchain Audit Log"><Sparkles size={16} /></button>
-                                )}
+                                <button onClick={() => fetchAuditLogs(task.id)} className="p-2 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors" title="View Blockchain Audit Log"><Sparkles size={16} /></button>
                                 <button onClick={() => { setCurrentTask(task); setShowModal(true); }} className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"><Edit2 size={16} /></button>
                                 <button onClick={() => handleDelete(task.id)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={16} /></button>
                             </div>

@@ -101,8 +101,19 @@ public class TaskController {
     private com.taskapp.backend.repository.TaskAuditRepository taskAuditRepository;
 
     @GetMapping("/{taskId}/audit")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<TaskAudit>> getAuditLogs(@PathVariable Long taskId) {
+        Optional<Task> taskOpt = taskRepository.findById(taskId);
+        if (taskOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        User currentUser = getCurrentUser();
+        boolean isAdmin = currentUser.getRole().name().equals("ROLE_ADMIN");
+        
+        if (!taskOpt.get().getUser().getId().equals(currentUser.getId()) && !isAdmin) {
+            return ResponseEntity.status(403).build();
+        }
+        
         return ResponseEntity.ok(taskAuditRepository.findByTaskIdOrderByTimestampDesc(taskId));
     }
 

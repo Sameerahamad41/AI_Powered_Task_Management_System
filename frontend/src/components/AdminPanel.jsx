@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
-import { Trash2, Edit2, ShieldAlert, Check, X, Shield, Eye } from 'lucide-react';
+import { Trash2, Edit2, ShieldAlert, Check, X, Shield, Eye, Sparkles } from 'lucide-react';
 
 const AdminPanel = () => {
     const [users, setUsers] = useState([]);
@@ -10,6 +10,8 @@ const AdminPanel = () => {
     const [editRole, setEditRole] = useState('');
     const [viewingUserTasks, setViewingUserTasks] = useState(null);
     const [userTasks, setUserTasks] = useState([]);
+    const [showAuditModal, setShowAuditModal] = useState(false);
+    const [auditLogs, setAuditLogs] = useState([]);
 
     useEffect(() => {
         fetchUsers();
@@ -63,6 +65,16 @@ const AdminPanel = () => {
         } catch (err) {
             console.error('Failed to fetch user tasks', err);
             alert('Failed to fetch user tasks');
+        }
+    };
+
+    const fetchAuditLogs = async (id) => {
+        try {
+            const res = await api.get(`/tasks/${id}/audit`);
+            setAuditLogs(res.data);
+            setShowAuditModal(true);
+        } catch (err) {
+            console.error('Failed to fetch audit logs', err);
         }
     };
 
@@ -174,11 +186,57 @@ const AdminPanel = () => {
                                             }`}>
                                                 {task.priority} Priority
                                             </span>
+                                            <button onClick={() => fetchAuditLogs(task.id)} className="mt-1 p-1.5 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors" title="View Blockchain Audit Log"><Sparkles size={16} /></button>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         )}
+                    </div>
+                </div>
+            )}
+            {showAuditModal && (
+                <div className="fixed inset-0 bg-gray-900/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 max-h-[85vh] overflow-y-auto border border-gray-100">
+                        <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
+                            <h3 className="text-xl font-black bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent flex items-center">
+                                <Sparkles className="w-6 h-6 text-emerald-500 mr-2" />
+                                Cryptographic Audit Ledger
+                            </h3>
+                            <button onClick={() => setShowAuditModal(false)} className="text-gray-400 hover:text-gray-800 font-bold bg-gray-100 hover:bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors">×</button>
+                        </div>
+                        <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
+                            {auditLogs.length === 0 ? (
+                                <div className="text-center py-10">
+                                    <div className="inline-block p-4 rounded-full bg-gray-50 mb-3">
+                                        <Sparkles className="w-8 h-8 text-gray-300" />
+                                    </div>
+                                    <p className="text-gray-500 font-medium">No cryptographic records found yet.</p>
+                                </div>
+                            ) : auditLogs.map((log, idx) => (
+                                <div key={log.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                                    <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-emerald-100 text-emerald-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                        <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div>
+                                    </div>
+                                    <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-5 rounded-2xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                                        <div className="flex justify-between items-start mb-3">
+                                            <span className={`px-3 py-1 text-[10px] uppercase tracking-wider font-bold rounded-full shadow-sm ${log.action === 'CREATED' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white' : log.action === 'UPDATED' ? 'bg-gradient-to-r from-amber-400 to-orange-400 text-white' : 'bg-gradient-to-r from-red-500 to-rose-500 text-white'}`}>
+                                                {log.action}
+                                            </span>
+                                            <span className="text-[11px] font-semibold text-gray-400 bg-gray-50 px-2 py-1 rounded-md">{new Date(log.timestamp).toLocaleString()}</span>
+                                        </div>
+                                        <div className="bg-gray-50 p-3 rounded-xl mb-2">
+                                            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Block Hash</div>
+                                            <div className="text-xs text-gray-700 font-mono break-all">{log.hash}</div>
+                                        </div>
+                                        <div className="bg-gray-50 p-3 rounded-xl">
+                                            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Previous Link</div>
+                                            <div className="text-xs text-gray-500 font-mono break-all">{log.previousHash}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}
