@@ -1,0 +1,27 @@
+# General
+.DS_Store
+*.log
+node_modules/
+dist/
+build/
+target/
+.env
+.env.*
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# Maven
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+/backend/target/
+
+# Frontend
+/frontend/node_modules/
+/frontend/dist/
+
+# Database
+/db-data/
