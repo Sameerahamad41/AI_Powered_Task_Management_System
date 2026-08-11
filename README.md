@@ -96,3 +96,22 @@ This creates an immutable, chained ledger of task updates. Admin users can view 
 - `PUT /api/admin/users/{id}` - Edit a user's role or email
 - `DELETE /api/admin/users/{id}` - Delete a user (and safely cascade delete their tasks/audit logs)
 - `GET /api/admin/users/{id}/tasks` - View tasks belonging to a specific user
+
+## 📸 Screenshots
+
+*(Please create a folder named `screenshots` in the root of the project and add the following images to it)*
+
+- **Login / Registration:**
+  ![Login Screen](screenshots/login.png)
+
+- **Mission Control (Task Board):**
+  ![Mission Control](screenshots/mission-control.png)
+
+- **AI Task Generation:**
+  ![AI Generation](screenshots/ai-generation.png)
+
+- **Blockchain Audit Ledger:**
+  ![Audit Ledger](screenshots/audit-ledger.png)
+
+- **Admin User Management:**
+  ![Admin Panel](screenshots/admin-panel.png)
