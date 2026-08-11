@@ -97,6 +97,48 @@ This creates an immutable, chained ledger of task updates. Admin users can view 
 - `DELETE /api/admin/users/{id}` - Delete a user (and safely cascade delete their tasks/audit logs)
 - `GET /api/admin/users/{id}/tasks` - View tasks belonging to a specific user
 
+## 🗄️ Database Schema (ER Diagram)
+
+The application uses a relational database (MySQL). Below is the Entity-Relationship (ER) diagram representing the database architecture:
+
+```mermaid
+erDiagram
+    users {
+        bigint id PK
+        varchar(255) email "UNIQUE"
+        varchar(255) password
+        enum role "ROLE_USER, ROLE_ADMIN"
+        datetime created_at
+        datetime updated_at
+    }
+
+    tasks {
+        bigint id PK
+        varchar(255) title
+        text description
+        enum priority "LOW, MEDIUM, HIGH"
+        datetime due_date
+        enum status "TODO, IN_PROGRESS, DONE"
+        datetime created_at
+        datetime updated_at
+        bigint user_id FK
+    }
+
+    task_audit {
+        bigint id PK
+        bigint task_id FK
+        bigint user_id FK
+        varchar(255) action "CREATED, UPDATED, DELETED"
+        datetime timestamp
+        varchar(64) hash
+        varchar(64) previous_hash
+    }
+
+    users ||--o{ tasks : "creates"
+    users ||--o{ task_audit : "performs action"
+    tasks ||--o{ task_audit : "has history log"
+```
+
 ## 📸 Screenshots
 
 *(Please create a folder named `screenshots` in the root of the project and add the following images to it)*
