@@ -48,7 +48,7 @@ const Login = ({ setAuth }) => {
                         </div>
                         <div>
                             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Password</label>
-                            <input type="password" required minLength="6" pattern=".*[!@#$%^&*()_+\-=\[\]{};':&quot;\\|,.<>\/?].*" title="Must be at least 6 characters and contain a special character" className="appearance-none relative block w-full px-4 py-3 border border-gray-200 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:text-sm transition-all shadow-sm bg-gray-50/50" placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} />
+                            <input type="password" required minLength="6" pattern=".*[^a-zA-Z0-9].*" title="Must be at least 6 characters and contain a special character" className="appearance-none relative block w-full px-4 py-3 border border-gray-200 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:text-sm transition-all shadow-sm bg-gray-50/50" placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} />
                         </div>
                     </div>
                     <div>
